@@ -167,70 +167,71 @@
 
         window.scroll(0, 0);
 
-        window.onload = function () {
+        var
+            currentHeight = 0, page = 0,
+            maxPages = document.querySelectorAll('section').length - 1,
+            viewportHeight = document.body.offsetHeight,
+            documentHeight = document.body.scrollHeight;
 
-            var currentHeight = 0;
+        function previous() {
+            page = Math.max(0, --page);
+            currentHeight = Math.min(page * viewportHeight, documentHeight);
+            window.scroll(0, Math.max(0, currentHeight));
+        }
 
-            var viewportHeight = document.body.offsetHeight;
+        function next() {
+            page = Math.min(maxPages, ++page);
+            currentHeight = Math.min(page * viewportHeight, documentHeight);
+            window.scroll(0, currentHeight);
+        }
 
-            var documentHeight = document.body.scrollHeight;
+        document.body.onkeydown = function (event) {
 
-            console.log({
-                currentHeight: currentHeight,
-                viewportHeight: viewportHeight,
-                documentHeight: documentHeight
-            });
+            event.preventDefault();
 
-            function previous() {
-                currentHeight = Math.max(0, currentHeight - viewportHeight);
-                window.scroll(0, Math.max(0, currentHeight));
-            }
-
-            function next() {
-                currentHeight = Math.min(currentHeight + viewportHeight, documentHeight);
-                window.scroll(0, currentHeight);
-            }
-
-            document.body.onkeydown = function (event) {
-
-                event.preventDefault();
-
-                // up
-                if (38 == event.which) {
-                    previous();
-                }
-
-                // down
-                if (40 == event.which) {
-                    next();
-                }
-
-            };
-
-            document.querySelector('.control.left').onclick = function (event) {
-                event.preventDefault();
+            // up
+            if (38 == event.which) {
                 previous();
             }
 
-            document.querySelector('.control.right').onclick = function (event) {
-                event.preventDefault();
+            // down
+            if (40 == event.which) {
                 next();
+            }
+
+        };
+
+        document.querySelector('.control.left').onclick = function (event) {
+            event.preventDefault();
+            previous();
+        }
+
+        document.querySelector('.control.right').onclick = function (event) {
+            event.preventDefault();
+            next();
+        }
+
+        window.addEventListener('resize', function (event) {
+
+            viewportHeight = document.body.offsetHeight;
+            documentHeight = document.body.scrollHeight;
+
+        });
+
+        window.addEventListener('load', function (event) {
+
+            window.scroll(0, 0);
+
+            var sections = document.querySelectorAll('section');
+
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.visibility = 'visible';
             }
 
             window.scroll(0, 0);
 
-            setTimeout(function () {
+        });
 
-                var sections = document.getElementsByTagName('section');
-
-                for (var i = 0; i < sections.length; i++) {
-                    sections[i].style.visibility = 'visible';
-                }
-
-                window.scroll(0, 0);
-
-            }, 200);
-        };
 
     </script>
 </body>
