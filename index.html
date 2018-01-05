@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <title>Roar 1.0</title>
     <style>
         body,
         html {
@@ -210,6 +211,8 @@
             event.preventDefault();
             next();
         }
+
+        document.body.requestFullscreen();
 
         window.addEventListener('resize', function (event) {
 
