@@ -21,6 +21,7 @@
             position: relative;
             border-bottom: #ccc solid 1px;
             box-sizing: border-box;
+            text-align: center;
         }
 
         section>div {
@@ -29,10 +30,11 @@
             -webkit-transform: translateY(-50%);
             -ms-transform: translateY(-50%);
             transform: translateY(-50%);
+            text-align: center;
         }
 
         body {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
             font-size: 30px;
             line-height: 1.2;
         }
@@ -49,6 +51,14 @@
             text-align: center;
             background: rgba(255, 255, 255, 0.8);
             font-size: 100px;
+            display: none;
+        }
+
+        .control.loading {
+            width: 100%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 70px;
         }
 
         .control.left {
@@ -171,115 +181,127 @@
 
         </div>
     </section>
+    <section>
+        <div style="width: 100%">
+            <p>The End</p>
+        </div>
+    </section>
     <div class="control left"></div>
     <div class="control right"></div>
     <div class="control start">Start</div>
+    <div class="control loading">Loading...</div>
     <script>
+        (function () {
+            window.scroll(0, 1);
 
-        window.scroll(0, 1);
+            var
+                currentHeight = 0, page = 0,
+                viewportHeight = 0,
+                documentHeight = 0,
+                maxPages = document.querySelectorAll('section').length - 1,
+                startSlide = document.querySelector('.control.start'),
+                loadingSlide = document.querySelector('.control.loading');
 
-        var
-            currentHeight = 0, page = 0,
-            maxPages = document.querySelectorAll('section').length - 1,
-            viewportHeight = document.body.offsetHeight,
-            documentHeight = document.body.scrollHeight,
-            startSlide = document.querySelector('.control.start');
+            onResize();
 
-        function previous() {
-            page = Math.max(0, --page);
-            currentHeight = Math.min(page * viewportHeight, documentHeight);
-            window.scroll(0, Math.max(0, currentHeight));
-        }
+            document.body.onkeydown = function (event) {
 
-        function next() {
-            page = Math.min(maxPages, ++page);
-            currentHeight = Math.min(page * viewportHeight, documentHeight);
-            window.scroll(0, currentHeight);
-        }
+                event.preventDefault();
 
-        document.body.onkeydown = function (event) {
+                // up
+                if (38 == event.which) {
+                    previous();
+                }
 
-            event.preventDefault();
+                // down
+                if (40 == event.which) {
+                    next();
+                }
 
-            // up
-            if (38 == event.which) {
+            };
+
+            document.querySelector('.control.left').onclick = function (event) {
+                event.preventDefault();
                 previous();
             }
 
-            // down
-            if (40 == event.which) {
+            document.querySelector('.control.right').onclick = function (event) {
+                event.preventDefault();
                 next();
             }
 
-        };
-
-        document.querySelector('.control.left').onclick = function (event) {
-            event.preventDefault();
-            previous();
-        }
-
-        document.querySelector('.control.right').onclick = function (event) {
-            event.preventDefault();
-            next();
-        }
-
-        startSlide.style.lineHeight = viewportHeight + 'px';
-        startSlide.onclick = function (event) {
-            toggleFullScreen();
-            startSlide.style.display = 'none';
-        };
-
-        function toggleFullScreen() {
-            var element = document.documentElement;
-            if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
-                if (element.requestFullscreen) {
-                    element.requestFullscreen();
-                } else if (element.msRequestFullscreen) {
-                    element.msRequestFullscreen();
-                } else if (element.mozRequestFullScreen) {
-                    element.mozRequestFullScreen();
-                } else if (element.webkitRequestFullscreen) {
-                    element.webkitRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitCancelFullScreen) {
-                    document.webkitCancelFullScreen();
-                }
-            }
-        }
-
-        function onResize() {
-            viewportHeight = document.body.offsetHeight;
-            documentHeight = document.body.scrollHeight;
             startSlide.style.lineHeight = viewportHeight + 'px';
-        }
+            startSlide.onclick = function (event) {
+                toggleFullScreen();
+                startSlide.style.display = 'none';
+            };
 
-        window.addEventListener('resize', function (event) {
-            onResize();
-        });
+            window.addEventListener('resize', function (event) {
+                onResize();
+            });
 
-        window.addEventListener('load', function (event) {
+            window.addEventListener('load', function (event) {
 
-            var sections = document.querySelectorAll('section');
+                var sections = document.querySelectorAll('section');
 
-            for (var i = 0; i < sections.length; i++) {
-                sections[i].style.visibility = 'visible';
+                loadingSlide.style.display = 'none';
+                startSlide.style.display = 'block';
+
+                for (var i = 0; i < sections.length; i++) {
+                    sections[i].style.visibility = 'visible';
+                }
+
+                window.scroll(0, 0);
+
+                setTimeout(function () {
+                    window.scroll(0, 0);
+                }, 1);
+            });
+
+            function previous() {
+                page = Math.max(0, --page);
+                currentHeight = Math.min(page * viewportHeight, documentHeight);
+                window.scroll(0, Math.max(0, currentHeight));
             }
 
-            window.scroll(0, 0);
+            function next() {
+                page = Math.min(maxPages, ++page);
+                currentHeight = Math.min(page * viewportHeight, documentHeight);
+                window.scroll(0, currentHeight);
+            }
 
-            setTimeout(function () {
-                window.scroll(0, 0);
-            }, 1);
-        });
+            function toggleFullScreen() {
+                var element = document.documentElement;
+                if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+                    if (element.requestFullscreen) {
+                        element.requestFullscreen();
+                    } else if (element.msRequestFullscreen) {
+                        element.msRequestFullscreen();
+                    } else if (element.mozRequestFullScreen) {
+                        element.mozRequestFullScreen();
+                    } else if (element.webkitRequestFullscreen) {
+                        element.webkitRequestFullscreen();
+                    }
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen();
+                    }
+                }
+            }
 
-
+            function onResize() {
+                viewportHeight = document.body.offsetHeight;
+                documentHeight = document.body.scrollHeight;
+                startSlide.style.lineHeight = viewportHeight + 'px';
+                loadingSlide.style.lineHeight = viewportHeight + 'px';
+            }
+        })();
     </script>
 </body>
 
