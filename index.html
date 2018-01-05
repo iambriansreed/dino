@@ -1,7 +1,9 @@
 <html>
 
 <head>
-    <title>Roar 1.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Roar 1.2</title>
     <style>
         body,
         html {
@@ -263,12 +265,18 @@
         });
 
         window.addEventListener('load', function (event) {
+
             var sections = document.querySelectorAll('section');
+
             for (var i = 0; i < sections.length; i++) {
                 sections[i].style.visibility = 'visible';
             }
-            window.scroll(0, 1);
 
+            window.scroll(0, 0);
+
+            setTimeout(function () {
+                window.scroll(0, 0);
+            }, 1);
         });
 
 
