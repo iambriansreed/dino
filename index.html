@@ -165,7 +165,7 @@
     <div class="control right"></div>
     <script>
 
-        window.scroll(0, 0);
+        window.scroll(0, 1);
 
         var
             currentHeight = 0, page = 0,
@@ -220,15 +220,13 @@
 
         window.addEventListener('load', function (event) {
 
-            window.scroll(0, 0);
-
             var sections = document.querySelectorAll('section');
 
             for (var i = 0; i < sections.length; i++) {
                 sections[i].style.visibility = 'visible';
             }
 
-            window.scroll(0, 0);
+            window.scroll(0, 1);
 
         });
 
