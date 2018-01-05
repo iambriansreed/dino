@@ -267,7 +267,7 @@
             function next() {
                 page = Math.min(maxPages, ++page);
                 currentHeight = Math.min(page * viewportHeight, documentHeight);
-                window.scroll(0, currentHeight);
+                window.scroll(0, Math.max(0, currentHeight));
             }
 
             function toggleFullScreen() {
@@ -300,6 +300,8 @@
                 documentHeight = document.body.scrollHeight;
                 startSlide.style.lineHeight = viewportHeight + 'px';
                 loadingSlide.style.lineHeight = viewportHeight + 'px';
+                currentHeight = Math.min(page * viewportHeight, documentHeight);
+                window.scroll(0, Math.max(0, currentHeight));
             }
         })();
     </script>
