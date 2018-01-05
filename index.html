@@ -42,6 +42,13 @@
             width: 50%;
         }
 
+        .control.start {
+            width: 100%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 40px;
+        }
+
         .control.left {
             left: 0;
         }
@@ -164,6 +171,7 @@
     </section>
     <div class="control left"></div>
     <div class="control right"></div>
+    <div class="control start">Start</div>
     <script>
 
         window.scroll(0, 1);
@@ -172,7 +180,8 @@
             currentHeight = 0, page = 0,
             maxPages = document.querySelectorAll('section').length - 1,
             viewportHeight = document.body.offsetHeight,
-            documentHeight = document.body.scrollHeight;
+            documentHeight = document.body.scrollHeight,
+            startSlide = document.querySelector('.control.start');
 
         function previous() {
             page = Math.max(0, --page);
@@ -212,23 +221,52 @@
             next();
         }
 
-        document.body.requestFullscreen();
+        startSlide.style.lineHeight = viewportHeight + 'px';
+        startSlide.onclick = function (event) {
+            toggleFullScreen();
+            startSlide.style.display = 'none';
+        };
 
-        window.addEventListener('resize', function (event) {
+        function toggleFullScreen() {
+            var element = document.documentElement;
+            if (!document.fullscreenElement && !document.msFullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement) {
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitCancelFullScreen) {
+                    document.webkitCancelFullScreen();
+                }
+            }
+        }
 
+        function onResize() {
             viewportHeight = document.body.offsetHeight;
             documentHeight = document.body.scrollHeight;
+            startSlide.style.lineHeight = viewportHeight + 'px';
+        }
 
+        window.addEventListener('resize', function (event) {
+            onResize();
         });
 
         window.addEventListener('load', function (event) {
-
             var sections = document.querySelectorAll('section');
-
             for (var i = 0; i < sections.length; i++) {
                 sections[i].style.visibility = 'visible';
             }
-
             window.scroll(0, 1);
 
         });
